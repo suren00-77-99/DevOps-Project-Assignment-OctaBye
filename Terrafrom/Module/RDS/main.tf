@@ -7,7 +7,7 @@ resource "aws_db_subnet_group" "this" {
 
 #DB instance
 resource "aws_db_instance" "this" {
-  identifier = "${var.vpc_name}-postgres"
+  identifier =  "octa-${var.vpc_name}-postgres"
   engine = "postgres"
   engine_version = "16.3"
   instance_class = "db.t3.micro"
