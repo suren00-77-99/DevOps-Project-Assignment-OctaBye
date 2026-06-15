@@ -42,7 +42,7 @@ locals {
 # VPC Module
 ##########################################
 module "vpc" {
-  source = "./Modules/VPC"
+  source = "./Module/VPC"
   project_name = var.project_name
   vpc_cidr = var.vpc_cidr
   public_subnet_cidrs = var.public_subnet_cidrs
@@ -55,7 +55,7 @@ module "vpc" {
 # Security Group Module
 ##########################################
 module "security_group" {
-  source = "./Modules/SG"
+  source = "./Module/SG"
   project_name = var.project_name
   vpc_id = module.vpc.vpc_id
   tags = local.common_tags
@@ -66,7 +66,7 @@ module "security_group" {
 ##########################################
 
 module "alb" {
-  source = "./Modules/ALB"
+  source = "./Module/ALB"
   project_name = var.project_name
   vpc_id = module.vpc.vpc_id
   public_subnet_ids = module.vpc.public_subnet_ids
@@ -77,7 +77,7 @@ module "alb" {
 # ECR Module
 ##########################################
 module "ecr" {
-  source = "./Modules/ECR"
+  source = "./Module/ECR"
   repository_name = "${var.project_name}-app"
   tags = local.common_tags
 
@@ -87,7 +87,7 @@ module "ecr" {
 ##########################################
 
 module "ecs" {
-  source = "./Modules/ECS"
+  source = "./Module/ECS"
   project_name = var.project_name
   private_subnet_ids = module.vpc.private_subnet_ids
   ecs_sg_id = module.security_group.ecs_sg_id
@@ -101,7 +101,7 @@ module "ecs" {
 ##########################################
 
 module "rds" {
-  source = "./Modules/RDS"
+  source = "./Module/RDS"
   project_name = var.project_name
   private_subnet_ids = module.vpc.private_subnet_ids
   rds_sg_id = module.security_group.rds_sg_id
@@ -116,7 +116,7 @@ module "rds" {
 ##########################################
 
 module "cloudwatch" {
-  source = "./Modules/CloudWatch"
+  source = "./Module/CloudWatch"
   project_name = var.project_name
   ecs_cluster_name = module.ecs.cluster_name
   ecs_service_name = module.ecs.service_name
