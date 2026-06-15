@@ -11,7 +11,7 @@ terraform {
   }
 
   backend "s3" {
-    bucket         = "8byte-terraform-state"
+    bucket         = "8byte-terraform-buck-devops"
     key            = "dev/terraform.tfstate"
     region         = "ap-south-1"
     dynamodb_table = "terraform-lock"
