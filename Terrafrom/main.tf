@@ -43,7 +43,7 @@ locals {
 ##########################################
 module "vpc" {
   source = "./Module/VPC"
-  project_name = var.project_name
+  vpc_name = var.project_name
   vpc_cidr = var.vpc_cidr
   public_subnet_cidrs = var.public_subnet_cidrs
   private_subnet_cidrs = var.private_subnet_cidrs
@@ -56,7 +56,7 @@ module "vpc" {
 ##########################################
 module "security_group" {
   source = "./Module/SG"
-  project_name = var.project_name
+  vpc_name = var.project_name
   vpc_id = module.vpc.vpc_id
   tags = local.common_tags
 
@@ -67,7 +67,7 @@ module "security_group" {
 
 module "alb" {
   source = "./Module/ALB"
-  project_name = var.project_name
+  vpc_name = var.project_name
   vpc_id = module.vpc.vpc_id
   public_subnet_ids = module.vpc.public_subnet_ids
   alb_sg_id = module.security_group.alb_sg_id
@@ -88,7 +88,7 @@ module "ecr" {
 
 module "ecs" {
   source = "./Module/ECS"
-  project_name = var.project_name
+  vpc_name = var.project_name
   private_subnet_ids = module.vpc.private_subnet_ids
   ecs_sg_id = module.security_group.ecs_sg_id
   target_group_arn = module.alb.target_group_arn
@@ -102,7 +102,7 @@ module "ecs" {
 
 module "rds" {
   source = "./Module/RDS"
-  project_name = var.project_name
+  vpc_name = var.project_name
   private_subnet_ids = module.vpc.private_subnet_ids
   rds_sg_id = module.security_group.rds_sg_id
   db_name = var.db_name
@@ -117,7 +117,7 @@ module "rds" {
 
 module "cloudwatch" {
   source = "./Module/CloudWatch"
-  project_name = var.project_name
+  vpc_name = var.project_name
   ecs_cluster_name = module.ecs.cluster_name
   ecs_service_name = module.ecs.service_name
   alb_arn_suffix = module.alb.alb_arn_suffix
