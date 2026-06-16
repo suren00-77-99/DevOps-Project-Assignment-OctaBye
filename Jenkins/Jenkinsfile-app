@@ -1,20 +1,25 @@
 pipeline {
     agent any
     environment {
+
+        APP_DIR = "Application-area"
+        IMAGE_NAME = "8byte-app"
+        IMAGE_TAG = "${BUILD_NUMBER}"
         AWS_REGION = "ap-south-1"
-        ECR_REPO = "536376965255.dkr.ecr.ap-south-1.amazonaws.com/8byte-app"
+        ECR_REPO = "xxxxxxxxxxxx.dkr.ecr.ap-south-1.amazonaws.com/8byte-app"
         ECS_CLUSTER = "8byte-cluster"
         ECS_SERVICE = "8byte-service"
     }
     stages {
         stage('Checkout') {
             steps {
-                checkout scm
+                git branch: 'main',
+                url: 'https://github.com/suren00-77-99/DevOps-Project-Assignment-OctaBye.git'
             }
         }
         stage('Unit Test') {
             steps {
-                dir('app') {
+                dir("${APP_DIR}") {
                     sh '''
                     python3 -m py_compile app.py
                     '''
@@ -23,67 +28,91 @@ pipeline {
         }
         stage('Build Docker Image') {
             steps {
-                dir('app') {
+                dir("${APP_DIR}") {
                     sh '''
-                    docker build -t 8byte-app .
+                    docker build -t ${IMAGE_NAME}:${IMAGE_TAG} .
                     '''
                 }
             }
         }
+
         stage('Trivy Scan') {
             steps {
                 sh '''
-                trivy image 8byte-app
+                trivy image ${IMAGE_NAME}:${IMAGE_TAG}
                 '''
             }
         }
-        stage('Login to ECR') {
+        stage('Login To ECR') {
             steps {
-                sh '''
-                aws ecr get-login-password \
-                --region $AWS_REGION |
-                docker login \
-                --username AWS \
-                --password-stdin $ECR_REPO
-                '''
+                withCredentials([
+                    [$class: 'AmazonWebServicesCredentialsBinding',
+                    credentialsId: 'aws-creds']
+                ]) {
+                    sh '''
+                    aws ecr get-login-password \
+                    --region ${AWS_REGION} |
+
+                    docker login \
+                    --username AWS \
+                    --password-stdin ${ECR_REPO}
+
+                    '''
+                }
+
             }
+
         }
-        stage('Push Image') {
+        stage('Push Image To ECR') {
             steps {
                 sh '''
-                docker tag 8byte-app:latest \
-                $ECR_REPO:latest
+                docker tag ${IMAGE_NAME}:${IMAGE_TAG} \
+                ${ECR_REPO}:${IMAGE_TAG}
+
                 docker push \
-                $ECR_REPO:latest
+                ${ECR_REPO}:${IMAGE_TAG}
+
                 '''
             }
         }
-        stage('Deploy Staging') {
+        stage('Deploy To Staging') {
             steps {
-                sh '''
-                aws ecs update-service \
-                --cluster $ECS_CLUSTER \
-                --service $ECS_SERVICE \
-                --force-new-deployment
-                '''
+                withCredentials([
+                    [$class: 'AmazonWebServicesCredentialsBinding',
+                    credentialsId: 'aws-creds']
+                ]) {
+
+                    sh '''
+                    aws ecs update-service \
+                    --cluster ${ECS_CLUSTER} \
+                    --service ${ECS_SERVICE} \
+                    --force-new-deployment
+
+                    '''
+                }
             }
         }
         stage('Production Approval') {
             steps {
                 input(
-                    message: "Deploy To Production?",
-                    ok: "Deploy"
+                    message: 'Deploy To Production?',
+                    ok: 'Deploy'
                 )
             }
         }
         stage('Production Deployment') {
             steps {
-                sh '''
-                aws ecs update-service \
-                --cluster $ECS_CLUSTER \
-                --service $ECS_SERVICE \
-                --force-new-deployment
-                '''
+                withCredentials([
+                    [$class: 'AmazonWebServicesCredentialsBinding',
+                    credentialsId: 'aws-creds']
+                ]) {
+                    sh '''
+                    aws ecs update-service \
+                    --cluster ${ECS_CLUSTER} \
+                    --service ${ECS_SERVICE} \
+                    --force-new-deployment
+                    '''
+                }
             }
         }
     }
