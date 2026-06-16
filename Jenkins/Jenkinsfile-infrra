@@ -9,7 +9,6 @@ pipeline {
                 checkout scm
             }
         }
-    stages{
         stage('debug-workspace') {
             steps {
                 sh 'pwd'
@@ -18,7 +17,6 @@ pipeline {
             }
         }
 
-    }
         stage('Terraform Init') {
             steps {
                 dir("${TF_DIR}") {
