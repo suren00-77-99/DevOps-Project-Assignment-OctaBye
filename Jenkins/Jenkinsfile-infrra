@@ -12,8 +12,7 @@ pipeline {
         stage('debug-workspace') {
             steps {
                 sh 'pwd'
-                sh 'ls -la'
-                sh 'ls -r'
+                sh 'find . -type f'
             }
         }
 
