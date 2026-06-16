@@ -6,7 +6,8 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                checkout scm
+                git branch: 'main',
+                    url: 'https://github.com/suren00-77-99/DevOps-Project-Assignment-OctaBye.git'
             }
         }
         stage('debug-workspace') {
