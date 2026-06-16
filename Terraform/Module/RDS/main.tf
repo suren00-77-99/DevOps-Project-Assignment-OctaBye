@@ -23,7 +23,7 @@ resource "aws_db_instance" "this" {
   vpc_security_group_ids = [
     var.rds_sg_id
   ]
-  backup_retention_period = 7
+  backup_retention_period = 0
   deletion_protection = false
   tags = merge(var.tags,{Name = "rds-${var.vpc_name}-postgres"})
 }
