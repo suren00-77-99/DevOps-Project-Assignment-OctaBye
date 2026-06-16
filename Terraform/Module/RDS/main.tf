@@ -9,7 +9,7 @@ resource "aws_db_subnet_group" "this" {
 resource "aws_db_instance" "this" {
   identifier =  "rds-${var.vpc_name}-postgres"
   engine = "postgres"
-  engine_version = "15.7"
+  engine_version = "16.14"
   instance_class = "db.t3.micro"
   allocated_storage = 20
   storage_type = "gp3"
