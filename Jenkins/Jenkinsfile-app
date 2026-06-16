@@ -48,7 +48,7 @@ pipeline {
                 dir("${APP_DIR}") {
 
                     sh '''
-                    docker build -t ${IMAGE_NAME}:${IMAGE_TAG} .
+                    docker build -t ${IMAGE_NAME}:latest .
                     '''
 
                 }
@@ -62,7 +62,7 @@ pipeline {
             steps {
 
                 sh '''
-                trivy image ${IMAGE_NAME}:${IMAGE_TAG}
+                trivy image ${IMAGE_NAME}:latest
                 '''
 
             }
