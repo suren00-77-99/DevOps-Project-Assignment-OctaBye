@@ -1,14 +1,19 @@
 pipeline {
+
     agent any
+
     environment {
 
         APP_DIR = "Application-area"
+
         IMAGE_NAME = "8byte-app"
+
         AWS_REGION = "ap-south-1"
+
         ECR_REGISTRY = "536376965255.dkr.ecr.ap-south-1.amazonaws.com"
+
         ECR_REPOSITORY = "8byte-app"
-        ECS_CLUSTER = "8byte-cluster"
-        ECS_SERVICE = "8byte-service"
+
     }
 
     stages {
@@ -47,7 +52,10 @@ pipeline {
                 dir("${APP_DIR}") {
 
                     sh '''
-                    docker build -t ${IMAGE_NAME}:latest .
+
+                    docker build \
+                    -t ${IMAGE_NAME}:latest .
+
                     '''
 
                 }
@@ -61,7 +69,9 @@ pipeline {
             steps {
 
                 sh '''
+
                 trivy image ${IMAGE_NAME}:latest
+
                 '''
 
             }
@@ -73,11 +83,13 @@ pipeline {
             steps {
 
                 sh '''
+
                 aws ecr get-login-password \
-                --region ${AWS_REGION} |
+                --region ${AWS_REGION} | \
                 docker login \
                 --username AWS \
                 --password-stdin ${ECR_REGISTRY}
+
                 '''
 
             }
@@ -89,57 +101,13 @@ pipeline {
             steps {
 
                 sh '''
-                docker tag ${IMAGE_NAME}:latest \
+
+                docker tag \
+                ${IMAGE_NAME}:latest \
                 ${ECR_REGISTRY}/${ECR_REPOSITORY}:latest
 
-
-                docker push ${ECR_REGISTRY}/${ECR_REPOSITORY}:latest
-                '''
-                
-            }
-
-        }
-
-        stage('Deploy To ECS') {
-
-            steps {
-
-                sh '''
-
-                aws ecs update-service \
-                --cluster ${ECS_CLUSTER} \
-                --service ${ECS_SERVICE} \
-                --force-new-deployment
-
-                '''
-
-            }
-
-        }
-
-        stage('Production Approval') {
-
-            steps {
-
-                input(
-                    message: 'Deploy to Production?',
-                    ok: 'Deploy'
-                )
-
-            }
-
-        }
-
-        stage('Production Deployment') {
-
-            steps {
-
-                sh '''
-
-                aws ecs update-service \
-                --cluster ${ECS_CLUSTER} \
-                --service ${ECS_SERVICE} \
-                --force-new-deployment
+                docker push \
+                ${ECR_REGISTRY}/${ECR_REPOSITORY}:latest
 
                 '''
 
@@ -148,4 +116,21 @@ pipeline {
         }
 
     }
+
+    post {
+
+        success {
+
+            echo 'Docker image pushed successfully to ECR.'
+
+        }
+
+        failure {
+
+            echo 'Pipeline failed.'
+
+        }
+
+    }
+
 }
