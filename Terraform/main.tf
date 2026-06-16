@@ -116,7 +116,7 @@ module "rds" {
 ##########################################
 
 module "cloudwatch" {
-  source           = "./Module/CloudWatch"
+  source           = "./Module/Cloudwatch"
   vpc_name         = var.project_name
   ecs_cluster_name = module.ecs.cluster_name
   ecs_service_name = module.ecs.service_name
