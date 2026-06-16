@@ -9,6 +9,16 @@ pipeline {
                 checkout scm
             }
         }
+    stages{
+        stage('debug-workspace') {
+            steps {
+                sh 'pwd'
+                sh 'ls -la'
+                sh 'ls -r'
+            }
+        }
+
+    }
         stage('Terraform Init') {
             steps {
                 dir("${TF_DIR}") {
@@ -34,7 +44,9 @@ pipeline {
             steps {
                 dir("${TF_DIR}") {
                     sh '''
-                    terraform plan 
+                    terraform plan \
+                    -var-file=terraform.tfvars \
+                    -out=tfplan
                     '''
                 }
             }
