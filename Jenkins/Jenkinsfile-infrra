@@ -1,6 +1,6 @@
-pipeline {
-    agent any
-    environment {
+    pipeline {
+        agent any
+        environment {
         TF_DIR = "Terraform"
     }
     stages {
@@ -10,31 +10,43 @@ pipeline {
                     url: 'https://github.com/suren00-77-99/DevOps-Project-Assignment-OctaBye.git'
             }
         }
-        stage('debug-workspace') {
+        stage('Debug Workspace') {
             steps {
-                sh 'pwd'
-                sh 'find . -type f'
+                sh '''
+                pwd
+                echo "===== ROOT FILES ====="
+                ls -la
+                echo "===== ALL FILES ====="
+                find . -type f
+                echo "===== TERRAFORM DIRECTORY ====="
+                ls -la ${TF_DIR}
+                '''
             }
         }
-
         stage('Terraform Init') {
             steps {
                 dir("${TF_DIR}") {
-                    sh 'terraform init'
+                    sh '''
+                    terraform init
+                    '''
                 }
             }
         }
         stage('Terraform Format Check') {
             steps {
                 dir("${TF_DIR}") {
-                    sh 'terraform fmt -check'
+                    sh '''
+                    terraform fmt -check
+                    '''
                 }
             }
         }
         stage('Terraform Validate') {
             steps {
                 dir("${TF_DIR}") {
-                    sh 'terraform validate'
+                    sh '''
+                    terraform validate
+                    '''
                 }
             }
         }
@@ -44,7 +56,8 @@ pipeline {
                     sh '''
                     pwd
                     ls -la
-                    terraform plan -out=tfplann
+                    terraform plan \
+                    -out=tfplan
                     '''
                 }
             }
@@ -52,8 +65,8 @@ pipeline {
         stage('Approval') {
             steps {
                 input(
-                    message: 'Approve Terraform Apply?',
-                    ok: 'Apply'
+                    message: "Approve Terraform Apply?",
+                    ok: "Apply"
                 )
             }
         }
@@ -66,7 +79,7 @@ pipeline {
                 }
             }
         }
-        stage('Terraform Output') {
+        stage('Terraform Outputs') {
             steps {
                 dir("${TF_DIR}") {
                     sh '''
@@ -76,4 +89,13 @@ pipeline {
             }
         }
     }
-}
+
+    post {
+        success {
+            echo "Infrastructure creation completed successfully."
+        }
+        failure {
+            echo "Infrastructure creation failed."
+        }
+    }
+    }
