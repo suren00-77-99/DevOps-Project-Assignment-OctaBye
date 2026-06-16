@@ -42,9 +42,9 @@ pipeline {
             steps {
                 dir("${TF_DIR}") {
                     sh '''
-                    terraform plan \
-                    -var-file=terraform.tfvars \
-                    -out=tfplan
+                    pwd
+                    ls -la
+                    terraform plan -out=tfplann
                     '''
                 }
             }
