@@ -1,13 +1,13 @@
 resource "aws_db_subnet_group" "this" {
-  name = "${var.vpc_name}-db-subnet-group"
+  name = "rds-${var.vpc_name}-db-subnet-group"
   subnet_ids = var.private_subnet_ids
-  tags = merge(var.tags,{Name = "${var.vpc_name}-db-subnet-group"})
+  tags = merge(var.tags,{Name = "rds-${var.vpc_name}-db-subnet-group"})
 
 }
 
 #DB instance
 resource "aws_db_instance" "this" {
-  identifier =  "octa-${var.vpc_name}-postgres"
+  identifier =  "rds-${var.vpc_name}-postgres"
   engine = "postgres"
   engine_version = "16.3"
   instance_class = "db.t3.micro"
@@ -25,5 +25,5 @@ resource "aws_db_instance" "this" {
   ]
   backup_retention_period = 7
   deletion_protection = false
-  tags = merge(var.tags,{Name = "${var.vpc_name}-postgres"})
+  tags = merge(var.tags,{Name = "rds-${var.vpc_name}-postgres"})
 }
