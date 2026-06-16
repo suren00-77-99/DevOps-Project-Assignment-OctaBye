@@ -3,19 +3,13 @@ pipeline {
     environment {
 
         APP_DIR = "Application-area"
-
         IMAGE_NAME = "8byte-app"
-
         IMAGE_TAG = "${BUILD_NUMBER}"
-
         AWS_REGION = "ap-south-1"
-
-        ECR_REPO = "536376965255.dkr.ecr.ap-south-1.amazonaws.com/8byte-app"
-
+        ECR_REGISTRY = "123456789012.dkr.ecr.ap-south-1.amazonaws.com"
+        ECR_REPOSITORY = "8byte-app"
         ECS_CLUSTER = "8byte-cluster"
-
         ECS_SERVICE = "8byte-service"
-
     }
 
     stages {
@@ -84,7 +78,7 @@ pipeline {
                 --region ${AWS_REGION} |
                 docker login \
                 --username AWS \
-                --password-stdin ${ECR_REPO}
+                --password-stdin ${ECR_REGISTRY}
                 '''
 
             }
@@ -98,9 +92,10 @@ pipeline {
                 sh '''
 
                 docker tag ${IMAGE_NAME}:${IMAGE_TAG} \
-                ${ECR_REPO}:${IMAGE_TAG}
+                ${ECR_REGISTRY}/${ECR_REPOSITORY}:${IMAGE_TAG}
 
-                docker push ${ECR_REPO}:${IMAGE_TAG}
+                docker push\
+                ${ECR_REGISTRY}/${ECR_REPOSITORY}:${IMAGE_TAG}
 
                 '''
 
