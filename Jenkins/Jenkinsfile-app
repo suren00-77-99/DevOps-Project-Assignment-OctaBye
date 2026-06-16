@@ -6,7 +6,7 @@ pipeline {
         IMAGE_NAME = "8byte-app"
         IMAGE_TAG = "${BUILD_NUMBER}"
         AWS_REGION = "ap-south-1"
-        ECR_REPO = "xxxxxxxxxxxx.dkr.ecr.ap-south-1.amazonaws.com/8byte-app"
+        ECR_REPO = "536376965255.dkr.ecr.ap-south-1.amazonaws.com/8byte-app"
         ECS_CLUSTER = "8byte-cluster"
         ECS_SERVICE = "8byte-service"
     }
