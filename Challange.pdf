@@ -148,7 +148,7 @@ Validated networking, target group configuration, and container port mapping.
 
 ### Learning
 Application troubleshooting should follow a structured approach from Load Balancer to Container.
-https://chatgpt.com/share/6a316327-e754-83ee-8657-8010e97baae4
+http://8byte-alb-2116250128.ap-south-1.elb.amazonaws.com
 ---
 
 # Key Learnings
