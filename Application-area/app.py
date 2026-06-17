@@ -4,11 +4,11 @@ app = Flask(__name__)
 
 @app.route("/")
 def home():
-    return "8Byte DevOps Assignment Running Successfully"
+    return "8Byte DevOps Assignment Running Successfully\n Please check /health endpoint for health status"
 
-# @app.route("/health")
-# def health():
-#     return {"status":"healthy"}
+@app.route("/health")
+def health():
+    return {"status":"healthy"}
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0",port=8080)
