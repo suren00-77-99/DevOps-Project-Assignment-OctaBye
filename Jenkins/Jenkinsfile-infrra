@@ -83,7 +83,7 @@ pipeline {
         // }
         stage('Terraform Destroy') {
             steps {
-                dir('Terrafrom') {
+                dir("${TF_DIR}") {
                     sh '''
                     terraform init
                     terraform destroy -auto-approve
