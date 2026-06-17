@@ -6,7 +6,7 @@ app = Flask(__name__)
 def home():
     return """
 8Byte DevOps Assignment Running Successfully
-Please check /health endpoint for health status
+what is your name? and what is your favorite place to visit?
 """
 
 @app.route("/health")
