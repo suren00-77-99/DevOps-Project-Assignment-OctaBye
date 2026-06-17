@@ -4,7 +4,10 @@ app = Flask(__name__)
 
 @app.route("/")
 def home():
-    return "8Byte DevOps Assignment Running Successfully\n Please check /health endpoint for health status"
+    return """
+8Byte DevOps Assignment Running Successfully
+Please check /health endpoint for health status
+"""
 
 @app.route("/health")
 def health():

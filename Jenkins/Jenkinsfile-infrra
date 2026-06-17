@@ -9,6 +9,28 @@ pipeline {
                 checkout scm
             }
         }
+
+        stage('Check Terraform Changes') {
+            steps {
+                script {
+
+                    def changedFiles = sh(
+                        script: '''
+                        git diff --name-only HEAD~1 HEAD
+                        ''',
+                        returnStdout: true
+                    ).trim()
+
+                    echo changedFiles
+
+                    if (!changedFiles.contains("Terraform/")) {
+                        currentBuild.result = 'NOT_BUILT'
+                        error("No Terraform changes detected. Skipping pipeline.")
+                    }
+                }
+            }
+        }
+
         stage('Terraform Init') {
             steps {
                 dir("${TF_DIR}") {

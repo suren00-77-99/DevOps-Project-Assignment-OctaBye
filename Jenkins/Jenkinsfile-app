@@ -33,6 +33,31 @@ pipeline {
             }
 
         }
+        
+        stage('Check Application Changes') {
+            steps {
+
+                script {
+
+                    def changedFiles = sh(
+                        script: '''
+                        git diff --name-only HEAD~1 HEAD
+                        ''',
+                        returnStdout: true
+                    ).trim()
+
+                    echo "Changed Files:"
+                    echo changedFiles
+
+                    if (!changedFiles.contains("Application-area/")) {
+                        currentBuild.result = 'NOT_BUILT'
+                        error("No Application changes detected. Skipping pipeline.")
+                    }
+                }
+
+            }
+
+        }
 
         stage('Unit Test') {
 
