@@ -52,13 +52,31 @@ pipeline {
                 }
             }
         }
-        // stage('Terraform Plan') {
+        stage('Terraform Plan') {
+            steps {
+                dir("${TF_DIR}") {
+                    sh '''
+                    terraform plan \
+                    -var-file=terraform.tfvars \
+                    -out=tfplan
+                    '''
+                }
+            }
+        }
+
+        stage('Approval') {
+            steps {
+                input(
+                    message: 'Approve Terraform Apply?',
+                    ok: 'Apply'
+                )
+            }
+        }
+        // stage('Terraform Apply') {
         //     steps {
         //         dir("${TF_DIR}") {
         //             sh '''
-        //             terraform plan \
-        //             -var-file=terraform.tfvars \
-        //             -out=tfplan
+        //             terraform apply -auto-approve tfplan
         //             '''
         //         }
         //     }
@@ -69,23 +87,6 @@ pipeline {
                     sh '''
                     terraform init
                     terraform destroy -auto-approve
-                    '''
-                }
-            }
-        }
-        stage('Approval') {
-            steps {
-                input(
-                    message: 'Approve Terraform Apply?',
-                    ok: 'Apply'
-                )
-            }
-        }
-        stage('Terraform Apply') {
-            steps {
-                dir("${TF_DIR}") {
-                    sh '''
-                    terraform apply -auto-approve tfplan
                     '''
                 }
             }
