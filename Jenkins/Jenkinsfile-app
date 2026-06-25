@@ -6,32 +6,20 @@ pipeline {
     environment {
 
         APP_DIR = "Application-area"
-
         IMAGE_NAME = "8byte-app"
-
         AWS_REGION = "ap-south-1"
-
         ECR_REGISTRY = "536376965255.dkr.ecr.ap-south-1.amazonaws.com"
-
         ECR_REPOSITORY = "8byte-app"
-
         ECS_CLUSTER = "8byte-cluster"
-
         ECS_SERVICE = "8byte-service"
-
     }
 
     stages {
-
         stage('Checkout') {
-
             steps {
-
                 git branch: 'main',
                     url: 'https://github.com/suren00-77-99/DevOps-Project-Assignment-OctaBye.git'
-
             }
-
         }
         
         // stage('Check Application Changes') {
