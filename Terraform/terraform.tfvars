@@ -1,6 +1,6 @@
 aws_region   = "ap-south-1"
 environment  = "POC-Test"
-project_name = "Octaa-byte"
+project_name = "octaa-byte"
 vpc_cidr     = "10.0.0.0/16"
 public_subnet_cidrs = [
   "10.0.1.0/24",
