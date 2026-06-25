@@ -14,6 +14,7 @@ resource "aws_lb" "this" {
 }
 #Target Group
 #ECS containers will register themselves here.
+
 resource "aws_lb_target_group" "this" {
   name = "${var.vpc_name}-tg"
   port = 8080
@@ -44,3 +45,9 @@ resource "aws_lb_listener" "this" {
     target_group_arn = aws_lb_target_group.this.arn
   }
 }
+
+# This Terraform code creates an ALB Target Group for an ECS Fargate application. 
+# It forwards HTTP traffic on port 8080 to ECS tasks using IP-based targets. 
+# It also configures health checks on the application's root path (/). 
+# The ALB checks the application every 30 seconds, waits up to 5 seconds for a response, 
+# and only routes traffic to tasks that return an HTTP 200 status. This ensures requests are sent only to healthy containers.
