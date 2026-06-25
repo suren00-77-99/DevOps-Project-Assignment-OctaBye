@@ -48,8 +48,8 @@ resource "aws_ecs_task_definition" "this" {
   requires_compatibilities = [
     "FARGATE"
   ]
-  cpu = 256
-  memory = 512
+  cpu = 256                        # 256 in cpu unite. 256cpuunit = 0.25vcpu, 512 = 0.51vcpu
+  memory = 512                    # 512 MB = 0.5gb , 1024 MB = 1GB ### for 256 cpu unit the give memory is good we can give upto 2GB.
   execution_role_arn = aws_iam_role.ecs_task_execution_role.arn
   container_definitions = jsonencode([
     {
