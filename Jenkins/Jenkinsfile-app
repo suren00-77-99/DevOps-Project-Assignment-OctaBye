@@ -22,30 +22,30 @@ pipeline {
             }
         }
         
-        stage('Check Application Changes') {
-            steps {
+        // stage('Check Application Changes') {
+        //     steps {
 
-                script {
+        //         script {
 
-                    def changedFiles = sh(
-                        script: '''
-                        git diff --name-only HEAD~1 HEAD
-                        ''',
-                        returnStdout: true
-                    ).trim()
+        //             def changedFiles = sh(
+        //                 script: '''
+        //                 git diff --name-only HEAD~1 HEAD
+        //                 ''',
+        //                 returnStdout: true
+        //             ).trim()
 
-                    echo "Changed Files:"
-                    echo changedFiles
+        //             echo "Changed Files:"
+        //             echo changedFiles
 
-                    if (!changedFiles.contains("Application-area/")) {
-                        currentBuild.result = 'NOT_BUILT'
-                        error("No Application changes detected. Skipping pipeline.")
-                    }
-                }
+        //             if (!changedFiles.contains("Application-area/")) {
+        //                 currentBuild.result = 'NOT_BUILT'
+        //                 error("No Application changes detected. Skipping pipeline.")
+        //             }
+        //         }
 
-            }
+        //     }
 
-        }
+        // }
 
         stage('Unit Test') {
 
