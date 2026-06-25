@@ -99,3 +99,9 @@ resource "aws_cloudwatch_dashboard" "app_dashboard" {
     ]
   })
 }
+
+##This Terraform code creates two CloudWatch dashboards.
+## The Infrastructure Dashboard monitors ECS CPU and memory utilization, 
+## while the Application Dashboard monitors ALB request count and RDS CPU utilization. 
+## The dashboards use CloudWatch metrics collected every 5 minutes, helping operations
+## teams monitor the health and performance of the application and infrastructure from a single place.
