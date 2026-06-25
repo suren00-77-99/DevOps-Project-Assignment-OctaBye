@@ -1,6 +1,6 @@
 aws_region   = "ap-south-1"
 environment  = "dev"
-project_name = "8byte"
+project_name = "Octa-byte"
 vpc_cidr     = "10.0.0.0/16"
 public_subnet_cidrs = [
   "10.0.1.0/24",
